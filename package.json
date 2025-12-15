@@ -1,0 +1,49 @@
+{
+  "name": "healthcare-management-system",
+  "version": "1.0.0",
+  "description": "A comprehensive healthcare management system with separate patient and doctor portals",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:patient\" \"npm run dev:doctor\"",
+    "dev:patient": "cd patient-portal && npm run dev",
+    "dev:doctor": "cd doctor-portal && npm run dev",
+    "build": "npm run build:patient && npm run build:doctor",
+    "build:patient": "cd patient-portal && npm run build",
+    "build:doctor": "cd doctor-portal && npm run build",
+    "start": "concurrently \"npm run start:patient\" \"npm run start:doctor\"",
+    "start:patient": "cd patient-portal && npm run start",
+    "start:doctor": "cd doctor-portal && npm run start",
+    "install:all": "npm install && cd patient-portal && npm install && cd ../doctor-portal && npm install",
+    "lint": "npm run lint:patient && npm run lint:doctor",
+    "lint:patient": "cd patient-portal && npm run lint",
+    "lint:doctor": "cd doctor-portal && npm run lint",
+    "clean": "npm run clean:patient && npm run clean:doctor",
+    "clean:patient": "cd patient-portal && rm -rf .next node_modules",
+    "clean:doctor": "cd doctor-portal && rm -rf .next node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "healthcare",
+    "management",
+    "nextjs",
+    "react",
+    "mongodb",
+    "patient-portal",
+    "doctor-portal",
+    "medical",
+    "appointments",
+    "prescriptions"
+  ],
+  "author": "Healthcare Management Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/healthcare-management-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/healthcare-management-system/issues"
+  },
+  "homepage": "https://github.com/yourusername/healthcare-management-system#readme"
+}
