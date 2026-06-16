@@ -112,7 +112,7 @@ export default function PrescriptionForm() {
                 <User className="h-5 w-5" />
                 Patient Information
               </CardTitle>
-              <CardDescription className="text-blue-600">Enter the patient's details to create a prescription</CardDescription>
+              <CardDescription className="text-blue-600">Enter the patient&apos;s details to create a prescription</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 p-6">
               <div className="space-y-2">

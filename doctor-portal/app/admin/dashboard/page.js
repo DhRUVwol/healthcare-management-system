@@ -14,6 +14,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchDoctors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchDoctors = async () => {

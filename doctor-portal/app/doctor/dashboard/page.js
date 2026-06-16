@@ -115,7 +115,7 @@ export default function DashboardPage() {
         {/* Tabs for different sections */}
         <Tabs defaultValue="appointments" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="appointments">Today's Appointments</TabsTrigger>
+            <TabsTrigger value="appointments">Today&apos;s Appointments</TabsTrigger>
             <TabsTrigger value="prescriptions">Recent Prescriptions</TabsTrigger>
           </TabsList>
 
@@ -123,7 +123,7 @@ export default function DashboardPage() {
           <TabsContent value="appointments" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Today's Appointments</CardTitle>
+                <CardTitle>Today&apos;s Appointments</CardTitle>
                 <CardDescription>
                   You have {stats.todayAppointments} appointments scheduled for today
                 </CardDescription>

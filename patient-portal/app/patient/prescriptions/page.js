@@ -54,6 +54,7 @@ export default function PrescriptionPage() {
     };
 
     initialize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchPrescriptions(patientId) {
