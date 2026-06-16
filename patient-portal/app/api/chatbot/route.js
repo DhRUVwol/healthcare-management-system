@@ -2,12 +2,14 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import jwt from "jsonwebtoken";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+
 
 export async function POST(req) {
   try {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || "dummy_key_for_build",
+    });
+    
     const { message, token } = await req.json();
 
     if (!message) {
