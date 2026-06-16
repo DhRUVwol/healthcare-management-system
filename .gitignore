@@ -135,4 +135,4 @@ storybook-static
 
 # Temporary files
 *.tmp
-*.temp
+*.tempatlas-credentials.env

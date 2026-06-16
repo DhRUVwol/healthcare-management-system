@@ -52,18 +52,14 @@ export async function POST(req) {
     console.log("✅ Connected to MongoDB");
 
     const body = await req.json();
-    console.log("📩 Received request body:", body);
-
-    // Extract fields from request body
     const doctorId = body.doctor_id;
     const patientId = body.patient_id;
-    // const date = body.date;
-    // const timeSlot = body.timeSlot; // Changed from 'time' to 'timeSlot'
-    // const reason = body.reason;
+    const date = body.date;
+    const timeSlot = body.timeSlot;
+    const reason = body.reason;
 
-    // Validate request body
-    if (!doctorId || !patientId ) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!doctorId || !patientId || !date || !timeSlot || !reason) {
+      return NextResponse.json({ error: "Doctor ID, Patient ID, date, timeSlot, and reason are required" }, { status: 400 });
     }
 
     // Check if doctor exists
@@ -90,13 +86,20 @@ export async function POST(req) {
     //   return NextResponse.json({ error: "Appointment slot is already booked" }, { status: 400 });
     // }
 
+    // Parse date to extract the day of the week
+    const appointmentDate = new Date(date);
+    const options = { weekday: "long" };
+    const appointmentDay = appointmentDate.toLocaleDateString("en-US", options);
+    
     // Create and save the new appointment
     const appointment = new Appointment({
-      doctor: doctorId,  // Changed from doctorId to doctor
-      patient: patientId, // Changed from patientId to patient
-      // date,
-      // timeSlot,          // Changed from time to timeSlot
-      // reason,
+      doctor: doctorId,
+      patient: patientId,
+      date: appointmentDate,
+      day: appointmentDay,
+      timeSlot: timeSlot,
+      reason: reason,
+      status: "Pending"
     });
 
     await appointment.save();

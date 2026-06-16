@@ -1,61 +1,42 @@
-
-
-
-
-// import mongoose from "mongoose";
-
-// const availabilitySchema = new mongoose.Schema({
-//   day: { type: String, required: true }, // e.g., "Monday"
-//   timeSlots: [{ type: String, required: true }], // e.g., ["9:00 AM - 11:00 AM", "2:00 PM - 4:00 PM"]
-// });
-
-// const doctorSchema = new mongoose.Schema(
-//   {
-//     fullName: { type: String, required: true },
-//     email: { type: String, required: true, unique: true },
-//     phone: { type: String, required: true },
-//     specialization: { type: String, required: true },
-//     qualifications: { type: String, required: true },
-//     bio: { type: String, required: true },
-//     officeAddress: { type: String, required: true },
-//     isActive: { type: Boolean, default: true },
-//     availability: { type: [availabilitySchema], default: [] },
-//   },
-//   { timestamps: true }
-// );
-
-// const Doctor = mongoose.models.Doctor || mongoose.model("Doctor", doctorSchema);
-
-// export default Doctor;
-
-
-
-
-
-
-
 import mongoose from "mongoose";
 
-const availabilitySchema = new mongoose.Schema({
-  day: { type: String, required: true },
-  timeSlots: [{ type: String, required: true }], // ["9:00 AM - 11:00 AM"]
-});
-
-const doctorSchema = new mongoose.Schema(
+const DoctorSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
+    password: { type: String, required: true },
     specialization: { type: String, required: true },
     qualifications: { type: String, required: true },
-    bio: { type: String, required: true },
-    officeAddress: { type: String, required: true },
+    bio: { type: String },
+    officeAddress: { type: String },
     isActive: { type: Boolean, default: true },
-    availability: { type: [availabilitySchema], default: [] },
+    availability: [
+      {
+        _id: false,
+        day: {
+          type: String,
+          required: true,
+          enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        },
+        timeSlots: [
+          {
+            _id: false,
+            startTime: { type: String, required: true },
+            endTime: { type: String, required: true }
+          }
+        ]
+      }
+    ]
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-const Doctor = mongoose.models.Doctor || mongoose.model("Doctor", doctorSchema);
+// // Virtual field for isAvailable
+// DoctorSchema.virtual("isAvailable").get(function () {
+//   return this.availability && this.availability.length > 0;
+// });
+
+const Doctor = mongoose.models.Doctor || mongoose.model("Doctor", DoctorSchema);
 
 export default Doctor;

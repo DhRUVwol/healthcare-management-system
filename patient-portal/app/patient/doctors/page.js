@@ -2,6 +2,11 @@
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/ui/sidebar";
 import { Search, Calendar, MapPin, Clock, Star } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function AvailableDoctors() {
     const [doctors, setDoctors] = useState([]);
@@ -9,6 +14,13 @@ export default function AvailableDoctors() {
     const [patientId, setPatientId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [specializationFilter, setSpecializationFilter] = useState("all");
+    
+    // Booking Modal State
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+    const [bookingDate, setBookingDate] = useState("");
+    const [bookingTimeSlot, setBookingTimeSlot] = useState("");
+    const [bookingReason, setBookingReason] = useState("");
 
     useEffect(() => {
         async function fetchDoctors() {
@@ -43,17 +55,32 @@ export default function AvailableDoctors() {
         fetchPatientId();
     }, []);
 
-    async function requestAppointment(doctor_id) {
+    const openBookingModal = (doctorId) => {
+        if (!patientId) {
+            alert("You must be logged in as a patient to request an appointment.");
+            return;
+        }
+        setSelectedDoctorId(doctorId);
+        setIsBookingModalOpen(true);
+    };
+
+    async function submitAppointment() {
         try {
-            if (!patientId) {
-                alert("You must be logged in as a patient to request an appointment.");
+            if (!bookingDate || !bookingTimeSlot || !bookingReason) {
+                alert("Please fill out all fields.");
                 return;
             }
 
             const response = await fetch("/api/appointments", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ doctor_id, patient_id: patientId }),
+                body: JSON.stringify({ 
+                    doctor_id: selectedDoctorId, 
+                    patient_id: patientId,
+                    date: bookingDate,
+                    timeSlot: bookingTimeSlot,
+                    reason: bookingReason
+                }),
             });
 
             const data = await response.json();
@@ -62,6 +89,10 @@ export default function AvailableDoctors() {
                 alert(data.error || "Failed to request appointment.");
             } else {
                 alert("Appointment request sent successfully!");
+                setIsBookingModalOpen(false);
+                setBookingDate("");
+                setBookingTimeSlot("");
+                setBookingReason("");
             }
         } catch (error) {
             console.error("❌ Error requesting appointment:", error);
@@ -166,7 +197,7 @@ export default function AvailableDoctors() {
                                         </div>
 
                                         <button
-                                            onClick={() => requestAppointment(doctor._id)}
+                                            onClick={() => openBookingModal(doctor._id)}
                                             className="mt-6 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
                                         >
                                             Request Appointment
@@ -178,6 +209,73 @@ export default function AvailableDoctors() {
                     </div>
                 </div>
             </div>
+
+            {/* Booking Modal */}
+            <Dialog open={isBookingModalOpen} onOpenChange={setIsBookingModalOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Request Appointment</DialogTitle>
+                        <DialogDescription>
+                            Choose an available date and time slot for your appointment.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="date">Date</Label>
+                            <Input 
+                                id="date" 
+                                type="date" 
+                                value={bookingDate}
+                                onChange={(e) => setBookingDate(e.target.value)}
+                                min={new Date().toISOString().split('T')[0]}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="timeSlot">Time Slot</Label>
+                            <Select value={bookingTimeSlot} onValueChange={setBookingTimeSlot}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a time slot" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="09:00 - 09:30">09:00 - 09:30</SelectItem>
+                                    <SelectItem value="09:30 - 10:00">09:30 - 10:00</SelectItem>
+                                    <SelectItem value="10:00 - 10:30">10:00 - 10:30</SelectItem>
+                                    <SelectItem value="10:30 - 11:00">10:30 - 11:00</SelectItem>
+                                    <SelectItem value="11:00 - 11:30">11:00 - 11:30</SelectItem>
+                                    <SelectItem value="11:30 - 12:00">11:30 - 12:00</SelectItem>
+                                    <SelectItem value="14:00 - 14:30">14:00 - 14:30</SelectItem>
+                                    <SelectItem value="14:30 - 15:00">14:30 - 15:00</SelectItem>
+                                    <SelectItem value="15:00 - 15:30">15:00 - 15:30</SelectItem>
+                                    <SelectItem value="15:30 - 16:00">15:30 - 16:00</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="reason">Reason for Visit</Label>
+                            <Textarea 
+                                id="reason" 
+                                placeholder="E.g., Checkup, fever, etc."
+                                value={bookingReason}
+                                onChange={(e) => setBookingReason(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <button 
+                            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+                            onClick={() => setIsBookingModalOpen(false)}
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                            onClick={submitAppointment}
+                        >
+                            Confirm Booking
+                        </button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

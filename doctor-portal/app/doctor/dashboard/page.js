@@ -53,7 +53,7 @@ export default function DashboardPage() {
         setAppointments(appointmentsData.data)
         setPrescriptions(prescriptionsData)
         setStats({
-          totalPatients: new Set(appointmentsData.data.map(apt => apt.patient._id)).size,
+          totalPatients: new Set(appointmentsData.data.map(apt => apt.patient?._id).filter(Boolean)).size,
           todayAppointments: todayAppointments.length,
           pendingApprovals: pendingAppointments.length,
           prescriptionsIssued: prescriptionsData.length
@@ -135,7 +135,7 @@ export default function DashboardPage() {
                     .map((appointment) => (
                       <div key={appointment._id} className="flex items-center justify-between p-4 border rounded-lg">
                         <div>
-                          <h4 className="font-medium">{appointment.patient.fullName}</h4>
+                          <h4 className="font-medium">{appointment.patient?.fullName || "Unknown Patient"}</h4>
                           <div className="flex items-center mt-1 text-sm text-gray-500">
                             <Clock className="mr-1 h-4 w-4" />
                             {appointment.timeSlot} - {appointment.reason}

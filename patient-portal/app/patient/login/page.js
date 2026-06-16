@@ -34,7 +34,7 @@
 //       // ✅ Store token & user details in localStorage
 //       localStorage.setItem("token", data.token);
 //       localStorage.setItem("patient", JSON.stringify(data.patient));
-//       localStorage.setItem("patient_id", data.patient._id);
+//       localStorage.setItem("patient_id", data.patient.id);
 
 //       // ✅ Redirect to dashboard
 //       router.push("/patient/dashboard");
@@ -130,7 +130,7 @@ export default function PatientLogin() {
       // ✅ Store token & user details in localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("patient", JSON.stringify(data.patient));
-      localStorage.setItem("patient_id", data.patient._id);
+      localStorage.setItem("patient_id", data.patient.id);
 
       // ✅ Redirect to dashboard
       router.push("/patient/dashboard");

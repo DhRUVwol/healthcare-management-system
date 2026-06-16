@@ -133,10 +133,7 @@ export async function GET(request, { params }) {
       .lean();
 
     if (!prescriptions || prescriptions.length === 0) {
-      return NextResponse.json(
-        { message: "No prescriptions found for this patient" },
-        { status: 200 }
-      );
+      return NextResponse.json([], { status: 200 });
     }
 
     // Transform data for client
