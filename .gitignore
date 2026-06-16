@@ -134,5 +134,5 @@ junit.xml
 storybook-static
 
 # Temporary files
-*.tmp
-*.tempatlas-credentials.env
+*.temp
+atlas-credentials.env
