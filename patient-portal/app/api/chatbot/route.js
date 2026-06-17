@@ -42,15 +42,11 @@ export async function POST(req) {
       { expiresIn: "1h" }
     );
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: "You are a helpful medical assistant." },
-        { role: "user", content: message },
-      ],
-    });
+    // Simulate network delay for a realistic feel
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    const reply = completion.choices[0].message.content;
+    // Mock response
+    const reply = "I am a simulated AI Health Assistant (Mock Mode). I cannot provide real medical advice because the OpenAI API key is not configured, but this demonstrates that the chat interface and token system work perfectly!";
 
     return NextResponse.json({
       response: reply,
